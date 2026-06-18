@@ -255,6 +255,143 @@ Features implemented:
 * README.md Documentation
 
 ---
+# 📊 DAX Measures & Calculated Columns
+
+## 📝 Calculated Columns
+
+### Customer Full Name
+
+```DAX
+Customer Full Name =
+Customer_Dim[FirstName] & " " & Customer_Dim[LastName]
+```
+
+### Year Month
+
+```DAX
+Year Month =
+FORMAT(Date_Dim[Date], "MMM YYYY")
+```
+
+### Profit Category
+
+```DAX
+Profit Category =
+SWITCH(
+    TRUE(),
+    Sales_Fact[TotalAmount] < 200, "Low",
+    Sales_Fact[TotalAmount] < 500, "Medium",
+    "High"
+)
+```
+
+---
+
+## 📈 KPI Measures
+
+### Total Sales
+
+```DAX
+Total Sales =
+SUM(Sales_Fact[TotalAmount])
+```
+
+### Total Orders
+
+```DAX
+Total Orders =
+COUNT(Sales_Fact[SaleID])
+```
+
+### Total Units Sold
+
+```DAX
+Total Units Sold =
+SUM(Sales_Fact[UnitsSold])
+```
+
+### Average Order Value
+
+```DAX
+Average Order Value =
+AVERAGE(Sales_Fact[TotalAmount])
+```
+
+### Estimated Profit
+
+```DAX
+Estimated Profit =
+SUM(Sales_Fact[TotalAmount]) * 0.25
+```
+
+### Returned Orders
+
+```DAX
+Returned Orders =
+COUNT(Returns_Fact[ReturnID])
+```
+
+### Return Rate %
+
+```DAX
+Return Rate % =
+DIVIDE(
+    [Returned Orders],
+    [Total Orders],
+    0
+)
+```
+
+---
+
+## 📅 Time Intelligence Measures
+
+### Sales YTD
+
+```DAX
+Sales YTD =
+TOTALYTD(
+    [Total Sales],
+    Date_Dim[Date]
+)
+```
+
+### Sales PY
+
+```DAX
+Sales PY =
+CALCULATE(
+    [Total Sales],
+    SAMEPERIODLASTYEAR(Date_Dim[Date])
+)
+```
+
+### YOY %
+
+```DAX
+YOY % =
+DIVIDE(
+    [Total Sales] - [Sales PY],
+    [Sales PY]
+)
+```
+
+### MOM %
+
+```DAX
+MOM % =
+VAR PrevMonth =
+    CALCULATE(
+        [Total Sales],
+        DATEADD(Date_Dim[Date], -1, MONTH)
+    )
+RETURN
+DIVIDE(
+    [Total Sales] - PrevMonth,
+    PrevMonth
+)
+```
+
 
 # 👨‍💻 Author
 
